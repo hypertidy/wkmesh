@@ -42,7 +42,7 @@ edges_vctrs <- function(handleable) {
         x1= .idx0[-1])
     )
 
-  list(verts = verts, edge = segs, crs = NA)
+  list(verts = tibble::as_tibble(verts), edge = tibble::as_tibble(segs), crs = NA)
 }
 
 ## materialize as wk
@@ -60,4 +60,18 @@ edge_linestring <- function(x) {
   wk_linestring(xy_all, feature_id = rep(1:nrow(x$edge), each = 2))
 }
 
+pslg_edges <- function(x, ...) {
+  P = as.matrix(x$verts[c("x", "y")]);  S = matrix(match(as.matrix(x$edge$edge), x$verts$.idx0), ncol = 2L)
+  RTriangle::pslg(P, S = S)
+}
+del_edges <- function(x, ...) {
+  x <- pslg_edges(x)
+  RTriangle::triangulate(x, ...)
+}
 
+
+plot_del <- function(x) {
+  plot(x$P, pch = ".")
+  polygon(x$P[t(cbind(x$E, x$E[,1], NA)), ])
+  invisible(NULL)
+}

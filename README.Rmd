@@ -1,5 +1,7 @@
 ---
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -18,11 +20,14 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of wkmesh is to ...
+The goal of wkmesh is to explore methods of creating meshes, we might move on from silicate/anglr, but at least we want to avoid dealing with formats, leverage wk/geos, and get a firmer basis for this. 
+
+We triangulate from edges but we don't currently trim holes or maintain identity of input features (use anglr or silicate with sf objects for now). 
+
 
 ## Installation
 
-You can install the development version of wkmesh like so:
+I wouldn't.  Nothing is exported, mostly I'm just leaving a trail for myself (indexing for meshes can be tricky and I only have informal methods. The main workhorse is {unjoin} and I'd like to expand out why that's so easy to use and how to use other methods). 
 
 ``` r
 # FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
@@ -30,27 +35,54 @@ You can install the development version of wkmesh like so:
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example: 
 
 ```{r example}
+devtools::load_all()
 library(wkmesh)
 library(wk)
 library(dplyr, warn.conflicts = FALSE)
 library(silicate)
-g <- wk::as_wkb(inlandwaters)
+g <- wk::as_wkb(minimal_mesh)
 
 system.time({
 
 x <- edges_vctrs(g)
 })
 
-
 system.time({
-  sc <- SC0(inlandwaters)
+
+x <- edges_unjoin(g)
 })
 
-plot(sc)
+# system.time({
+#   sc <- SC0(inlandwaters)
+# })
+
+#plot(sc)
 (el <- edge_linestring(x))
 
 
+del <- del_edges(x)
+names(del)
+plot_del(del)
+
+
 ```
+
+We have some informal functions to experiment with. 
+
+```{r draft}
+
+## this is just different methods of unique-fying coordinates to vertices
+edges_vctrs(inlandwaters)
+edges_unjoin(inlandwaters)
+
+## Delauanay criterion strict, minimal triangle angle 15 degrees
+plot_del(del_edges(edges_unjoin(inlandwaters[4, ]), D = T, q = 15))
+```
+
+
+## Code of Conduct
+  
+Please note that the wkmesh project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
