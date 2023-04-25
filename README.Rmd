@@ -1,0 +1,56 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# wkmesh
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of wkmesh is to ...
+
+## Installation
+
+You can install the development version of wkmesh like so:
+
+``` r
+# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(wkmesh)
+library(wk)
+library(dplyr, warn.conflicts = FALSE)
+library(silicate)
+g <- wk::as_wkb(inlandwaters)
+
+system.time({
+
+x <- edges_vctrs(g)
+})
+
+
+system.time({
+  sc <- SC0(inlandwaters)
+})
+
+plot(sc)
+(el <- edge_linestring(x))
+
+
+```
